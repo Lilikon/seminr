@@ -29,7 +29,7 @@ Imports:
     DiagrammeRsvg (>= 0.1),
     webp
 License: GPL-3
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.1.0)
 LazyData: TRUE
 URL: https://github.com/sem-in-r/seminr
 BugReports: https://github.com/sem-in-r/seminr/issues
