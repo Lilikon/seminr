@@ -2,6 +2,10 @@
 # and mmMatrix.
 
 # Construct (mmMatrix row) level functions
+# Return indicators of a construct from mmMatrix
+construct_indicators <- function(construct_name, mmMatrix) {
+  mmMatrix[mmMatrix[,1] == construct_name, 2]
+}
 
 # get number of items from a construct in a measurement model
 number_of_items <- function(construct) {
@@ -154,7 +158,7 @@ as.reflective.construct <- function(x, ...) {
 as.reflective.interaction <- function(x, ...) {
   x
 }
-
+#' @export
 as.reflective.matrix <- function(x, ...) {
   # TODO: give interaction mmMatrix column names so we can do: from[, "type"]
   x[, 3] <- "C"

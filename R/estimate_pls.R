@@ -22,6 +22,7 @@
 #'
 #' @param missing Function that replaces missing values.
 #'   \code{mean_replacement} is default.
+#'   \code{na.omit} removes incomplete cases.
 #'
 #' @param missing_value Value in dataset that indicates missing values.
 #'   NA is used by default.
@@ -31,6 +32,9 @@
 #'
 #' @param stopCriterion A parameter specifying the stop criterion for estimating the PLS model.
 #'   Default value is 7.
+#'
+#' @param assess_syntax A parameter that specifies whether the measurement and structural
+#'   model should be assessed for errors. Default value is FALSE.
 #'
 #' @return A list of the estimated parameters for the SEMinR model including:
 #'  \item{meanData}{A vector of the indicator means.}
@@ -58,7 +62,8 @@
 #'              missing = mean_replacement,
 #'              missing_value = NA,
 #'              maxIt = 300,
-#'              stopCriterion = 7)
+#'              stopCriterion = 7,
+#'              assess_syntax = FALSE)
 #'
 #' @seealso \code{\link{specify_model}} \code{\link{relationships}} \code{\link{constructs}} \code{\link{paths}} \code{\link{interaction_term}}
 #'          \code{\link{bootstrap_model}}
@@ -103,8 +108,14 @@ estimate_pls <- function(data,
                          missing = mean_replacement,
                          missing_value = NA,
                          maxIt=300,
-                         stopCriterion=7) {
+                         stopCriterion=7,
+                         assess_syntax = FALSE) {
   # NOTE: update rerun.pls_model() if parameters change!
+
+  # Check if the user has correct specified the model
+  if (assess_syntax) assess_model_specification(measurement_model,
+                                                structural_model,
+                                                data)
 
   message("Generating the seminr model")
   data[data == missing_value] <- NA
@@ -116,7 +127,7 @@ estimate_pls <- function(data,
     data <- data[,all_loc_non_int_items(measurement_model)]
   }
   data <- missing(data)
-  data <- stats::na.omit(data)
+  # data <- stats::na.omit(data)
 
   # Extract model specifications
   specified_model <- extract_models(model, measurement_model, structural_model)
@@ -261,4 +272,3 @@ rerun.pls_model <- function(x, ...) {
     stopCriterion     = not_null(args$stopCriterion,     x$settings$stopCriterion)
   )
 }
-
